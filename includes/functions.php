@@ -31,11 +31,11 @@ function safeEntities($data) {
 
 
 /* 
-*   Encode data submitted by the user
-*   This function will encode the data
+*   Safe printing data from database
+*   This function will safely print data from database
 */
-// Entities Encoding
-function __e($data) {
+// Safe Print
+function __($data) {
     return htmlspecialchars($data);
 }
 
@@ -45,7 +45,7 @@ function __e($data) {
 *   This function will decode the data
 */
 // Entities Decoding
-function __($data) {
+function __d($data) {
     return html_entity_decode($data);
 }
 
@@ -58,66 +58,5 @@ function __($data) {
 function validateId($id) {
 	if(preg_match('/^\\d+$/', $id)) {
 		return true;
-	}
-}
-
-
-/* 
-*   Get the word's information
-*   That user wants
-*   Param @word
-*/
-// Get Word's Translation
-function getWord($word) {
-    global $con;
-    $word = safeInput($word);
-    
-    // SQL QUERY
-    $sql = "SELECT di_english_word, di_persian_word, di_word_description FROM `di_wordlist` WHERE `di_english_word` = '$word' OR `di_persian_word` = '$word'";
-	$result = $con->query($sql);
-
-    // If the QUERY is Executed
-	if($result) {
-
-        // If has information
-		if($result->num_rows > 0) {
-			$row = $result->fetch_assoc();
-			$data = [
-				"status"	=> 200,
-				"message"	=> "Success",
-				"data"		=> [
-                    "english_word"  => __e($row['di_english_word']),
-                    "persian_word"  => __e($row['di_persian_word']),
-                    "word_description"  => __e($row['di_word_description']),
-
-                ]
-			];
-
-			header("HTTP/1.0 200 OK");
-			return json_encode($data, true);
-
-		}
-
-        // If word not found in the database
-		else {
-			$data = [
-				"status"	=> 404,
-				"message"	=> "No Such Word Found!"
-			];
-
-			header("HTTP/1.0 404");
-			return json_encode($data, true);
-		}
-	}
-
-    // If the QUERY can't be executed
-	else {
-		$data = [
-				"status"	=> 500,
-				"message"	=> "Internal Server Error",
-			];
-
-		header("HTTP/1.0 500");
-		return json_encode($data, true);
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-include (__DIR__ . "/../includes/functions.php");
+include (__DIR__ . "/includes/functions.php");
 
 
 // Headers
